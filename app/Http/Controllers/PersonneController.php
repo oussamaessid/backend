@@ -24,7 +24,8 @@ class PersonneController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'email' => 'required|string|email|unique:personne',
-            'password' => 'required|string|min:6'
+            'password' => 'required|string|min:6',
+            'image' => ''
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
@@ -53,17 +54,14 @@ class PersonneController extends Controller
             'access_token' => $token,
             'token-type' => 'bearer',
             //'expires_in' => Auth::guard('web')->factory()->getTTL() * 60,
-            'email' => Auth::guard('api')->user()->email,
-            'password' => Auth::guard('api')->user()->password,
-            'status' => 200
-
+            'user' => Auth::guard('api')->user()
         ]);
     }
 
 
     public function profile()
     {
-        return response()->json(Auth::guard('api')->user());
+        return response()->json(['user' => Auth::guard('api')->user()],200);
     }
     public function logout()
     {
